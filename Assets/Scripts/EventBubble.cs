@@ -25,6 +25,7 @@ public class EventBubble : MonoBehaviour
 
     private void OnMouseDown()
     {
+        Global.CameraFreeze = true;
         Debug.Log(EventBaseChance);
         Debug.Log("Event popup");
         GameHandler.EventPopup.SetActive(true);
