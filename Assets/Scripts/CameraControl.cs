@@ -18,10 +18,6 @@ public class CameraControl : MonoBehaviour
 
     public Transform CameraAnchor;
 
-    void Start()
-    {
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -58,7 +54,6 @@ public class CameraControl : MonoBehaviour
     void GetCameraZoom()
     {
         float scroll = Input.mouseScrollDelta.y;
-        Debug.Log(scroll);
 
         Vector3 CameraPosition = gameObject.transform.position;
         Vector3 AnchorPosition = new Vector3(CameraAnchor.transform.position.x, CameraAnchor.transform.position.y, CameraAnchor.transform.position.z);
@@ -72,7 +67,7 @@ public class CameraControl : MonoBehaviour
             }
             else
             {
-                gameObject.transform.Translate(zoom * ZoomSpeed * 10f * Time.deltaTime);
+                gameObject.transform.Translate(zoom * ZoomSpeed * 20f * Time.deltaTime);
             }
         }
     }
