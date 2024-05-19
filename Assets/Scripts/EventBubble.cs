@@ -8,7 +8,7 @@ public class EventBubble : MonoBehaviour
 {
     private GameHandler GameHandler;
 
-    public float EventBaseChance = 100.0f; // Event success chance with no variables (execpt time)
+    public float EventBaseChance = 1.0f; // Event success chance with no variables (execpt time)
     private float timer = 0.0f;
 
     void Start()
@@ -19,16 +19,18 @@ public class EventBubble : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        EventBaseChance -= Time.deltaTime * 3f;
-        Debug.Log(EventBaseChance);
+        EventBaseChance -= Time.deltaTime * 0.03f;
+        //Debug.Log(EventBaseChance);
     }
 
     private void OnMouseDown()
     {
         Global.CameraFreeze = true;
         Debug.Log(EventBaseChance);
-        Debug.Log("Event popup");
         GameHandler.EventPopup.SetActive(true);
+
+        // Slider only goes from 0.1 to 0.9
+        GameHandler.EventPopup.GetComponent<EventHandler>().SetGrayArea(1f-EventBaseChance);
         Destroy(gameObject);
     }
 

@@ -27,7 +27,7 @@ public class NPC : MonoBehaviour
 
             if (Random.Range(0.0f, 100.0f) < EventChance)
             {
-                Debug.Log("Event happened!");
+                //Debug.Log("Event happened!");
                 GameObject bubble = Instantiate(GameHandler.EventBubble, new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 3, gameObject.transform.position.z), Quaternion.identity);
                 bubble.AddComponent<EventBubble>();
                 bubble.SetActive(true);

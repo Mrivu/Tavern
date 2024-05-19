@@ -1,0 +1,12 @@
+TODO LIST:
+
+-- BASIC GAMEPLAY --
+[] Add Inventory
+[] Add Items
+[] Add Event Options
+[] Add Day/Night Cycle
+[] Add Save/Load System
+
+Name Ideas:
+- No bread at the borderlands
+- The Kirgman crossing

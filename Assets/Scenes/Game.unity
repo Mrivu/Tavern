@@ -241,7 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d48c3693b4c9c374d82cf094cb519763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EventChance: 5
+  EventChance: 100
 --- !u!1 &255190774
 GameObject:
   m_ObjectHideFlags: 0
@@ -431,7 +431,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 491583251}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 615162162}
+        m_TargetAssemblyTypeName: EventHandler, Assembly-CSharp
+        m_MethodName: ResolvePress
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &491583251
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -479,6 +491,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 615162161}
+  - component: {fileID: 615162162}
   - component: {fileID: 615162160}
   - component: {fileID: 615162159}
   - component: {fileID: 615162158}
@@ -572,6 +585,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &615162162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 615162157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8c8c86429830754d96063cb2aa78a7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventText: {fileID: 1972176013}
+  SuccessFill: {fileID: 689527545}
+  GrayFill: {fileID: 1440085890}
+  RequieredPercentage: {fileID: 1636636685}
+  CurrentPercentage: {fileID: 2020873908}
 --- !u!1 &689527543
 GameObject:
   m_ObjectHideFlags: 0
@@ -660,7 +690,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.17
+  m_Value: 0.476
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -925,7 +955,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
-  m_FillAmount: 0.17
+  m_FillAmount: 0.476
   m_FillClockwise: 0
   m_FillOrigin: 2
   m_UseSpriteMesh: 0
@@ -1291,7 +1321,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
-  m_FillAmount: 0.42
+  m_FillAmount: 0
   m_FillClockwise: 1
   m_FillOrigin: 2
   m_UseSpriteMesh: 0
