@@ -12,23 +12,114 @@ public static class Events
 
         public List<string> choices;
         public List<string> choiceResultText;
-        public List<int> choiceID;
         public List<float> choiceChance;
+        public List<Dictionary<int, int>> choiceReputation;
+        public List<bool> choiceEnabled;
     }
 
-    public class Event1 : Event
+    public class Brawl : Event
     {
-        public Event1()
+        // Factions: Azure, Refugees, Townsfolk, Rascals
+        // KEY: ID, VALUE: Reputation change
+
+        public Brawl()
         {
             eventID = 1;
             eventText = "Stop Brawl";
-            eventDescription = "Two customers started a Brawl!";
+            eventDescription = "A guard and a townsman started a brawl. \"Fuck you! I'll hang make sure you hang!\", cries the guard. \"You asked for this fucker!\", retorts the townsman.";
             baseSuccess = 0.8f;
 
-            choices = new List<string>() { "Bribe", "Side with attacker", "Side with victim", "Kick from tavern" };
-            choiceResultText = new List<string>() { "+10 success chance, costs gold", "+25 success chance, the victim won't be happy", "+25 success chance, the attacker won't be happy", "+45 success chance, potentially lose customers" };
-            choiceID = new List<int>() { 1, 2, 3, 4 };
+            choices = new List<string>() { "Bribe them to stop", "Side with guard", "Side with townsman", "Kick both from the tavern" };
+            choiceResultText = new List<string>() { "+10 success chance, costs gold. Both will be slightly unhappy", "+25 success chance, the townsman won't be happy", "+25 success chance, the guard won't be happy", "+45 success chance, potentially lose customers. Both will be slightly unhappy" };
             choiceChance = new List<float>() { 0.1f, 0.25f, 0.25f, 0.45f };
+            choiceReputation = new List<Dictionary<int, int>>()
+            {
+               new Dictionary<int, int>()
+               {
+                   { 0, -3 },
+                   { 2, -3 },
+               },
+               new Dictionary<int, int>()
+               {
+                   { 0, 5 },
+                   { 2, -10 }
+               },
+               new Dictionary<int, int>()
+               {
+                   { 0, -10 },
+                   { 2, 5 }
+               },
+               new Dictionary<int, int>()
+               {
+                   { 0, -5 },
+                   { 2, -5 }
+               },
+               new Dictionary<int, int>() // If failed
+               {
+                   { 0, -15 },
+                   { 2, -15 }
+               }
+            };
+
+            choiceEnabled = new List<bool>() { true, true, true, true };
+        }
+    }
+
+    public class Thief : Event
+    {
+        public Thief()
+        {
+            eventID = 2;
+            eventText = "You noticed a thief";
+            eventDescription = "A thief grabbed something from behind the counter";
+            baseSuccess = 0.4f;
+
+            choices = new List<string>() { "Catch", "Call patrons", "Call guards", "Let them escape" };
+            choiceResultText = new List<string>() { "Catch the thief yourself", "+25 success chance, Tavern patrons might get hurt", "Requires reputation above 0 with the Azure. +25 when reputation 0, +35 when reputation 30 and +45 when reputation 60.", "-100 success chance. The thief will escape" };
+            // CHeck Azure reputation
+            float azureHelp = 0.0f;
+            choiceEnabled = new List<bool>() { true, true, true, true };
+            if (GameHandler.Instance.AzureReputation >= 60)
+            {
+                azureHelp = 0.45f;
+            }
+            else if (GameHandler.Instance.AzureReputation >= 30)
+            {
+                azureHelp = 0.35f;
+            }
+            else if (GameHandler.Instance.AzureReputation >= 0)
+            {
+                azureHelp = 0.25f;
+            }
+            else
+            {
+                azureHelp = 0.0f;
+                choiceEnabled = new List<bool>() { true, true, false, true };
+            }
+            choiceChance = new List<float>() { 0.0f, 0.25f, azureHelp, -1.0f };
+            choiceReputation = new List<Dictionary<int, int>>()
+            {
+               new Dictionary<int, int>()
+               {
+                   { 2, 2 },
+               },
+               new Dictionary<int, int>()
+               {
+                   { 2, -5 }
+               },
+               new Dictionary<int, int>()
+               {
+                   { 0, -3 },
+               },
+               new Dictionary<int, int>()
+               {
+                   { 3, -5 }
+               },
+               new Dictionary<int, int>() // If failed
+               {
+                   { 3, -10 }
+               }
+            };
         }
     }
 
@@ -37,7 +128,8 @@ public static class Events
     static Events()
     {
         eventDictionary = new Dictionary<int, Event>();
-        AddEvent(new Event1());
+        AddEvent(new Brawl());
+        AddEvent(new Thief());
     }
 
     public static void AddEvent(Event newEvent)

@@ -29,10 +29,19 @@ public class EventHandler : MonoBehaviour
     public Button C4;
     private Button[] Choices;
 
+    // Reputation
+    public TextMeshProUGUI Azure;
+    public TextMeshProUGUI Refugees;
+    public TextMeshProUGUI Townsfolk;
+    public TextMeshProUGUI Rascals;
+    private TextMeshProUGUI[] Factions;
+
     private float timer = 0.0f;
     private float timerStart = 2.0f;
     private bool startTime = false;
     private float RandomPercentage;
+
+    private List<bool> enabledChoices;
 
     Events.Event currentEvent;
 
@@ -45,7 +54,10 @@ public class EventHandler : MonoBehaviour
         EventText.text = returnEvent.eventText;
         EventDescription.text = returnEvent.eventDescription;
         currentEvent = returnEvent;
+        enabledChoices = returnEvent.choiceEnabled;
         Choices = new Button[] { C1, C2, C3, C4 };
+        Factions = new TextMeshProUGUI[] { Azure, Refugees, Townsfolk, Rascals };
+        SetReputationText();
 
         for (int i = 0; i < Choices.Count(); i++)
         {
@@ -54,7 +66,8 @@ public class EventHandler : MonoBehaviour
 
         CurrentPercentage.text = "0%";
         SuccessFill.value = 0f;
-
+        
+        DisableChoices();
         EnableChoices();
     }
 
@@ -69,26 +82,54 @@ public class EventHandler : MonoBehaviour
         C4.onClick.AddListener(Input4);
     }
 
+    private void SetReputationText()
+    {
+        for (int i = 0; i < Factions.Count(); i++)
+        {
+            Factions[i].text = GameHandler.Instance.Reputations[i].ToString();
+        }
+    }
+
     private void Input1()
     {
-        Debug.Log("Input1");
         DisableChoices();
-        AddSuccessRate(currentEvent.choiceChance[0]);
+        HandleChoice(0);
     }
     private void Input2() 
     { 
         DisableChoices();
-        AddSuccessRate(currentEvent.choiceChance[1]);
+        HandleChoice(1);
     }
     private void Input3()
     {
         DisableChoices();
-        AddSuccessRate(currentEvent.choiceChance[2]);
+        HandleChoice(2);
     }
     private void Input4() 
     {
         DisableChoices();
-        AddSuccessRate(currentEvent.choiceChance[3]);
+        HandleChoice(3);
+    }
+
+    private void HandleChoice(int choice)
+    {
+        AddSuccessRate(currentEvent.choiceChance[choice]);
+
+        // Update reputation
+        foreach (KeyValuePair<int, int> entry in currentEvent.choiceReputation[choice])
+        {
+            GameHandler.Instance.Reputations[entry.Key] += entry.Value;
+            if (GameHandler.Instance.Reputations[entry.Key] > 100)
+            {
+                GameHandler.Instance.Reputations[entry.Key] = 100;
+            }
+            else if (GameHandler.Instance.Reputations[entry.Key] < -100)
+            {
+                GameHandler.Instance.Reputations[entry.Key] = -100;
+            }   
+        }
+
+        SetReputationText();
     }
 
     private void DisableChoices()
@@ -104,8 +145,11 @@ public class EventHandler : MonoBehaviour
     {
         for (int i = 0; i < Choices.Count(); i++)
         {
-            Choices[i].interactable = true;
-            Choices[i].gameObject.GetComponent<Image>().color = Color.white;
+            if (enabledChoices[i])
+            {
+                Choices[i].interactable = true;
+                Choices[i].gameObject.GetComponent<Image>().color = Color.white;
+            }
         }
     }
 
@@ -161,7 +205,7 @@ public class EventHandler : MonoBehaviour
     {
         GrayFill.fillAmount -= increase*0.8f;
         int textInt = int.Parse(RequieredPercentage.text.Replace("%", ""));
-        RequieredPercentage.text = textInt + increase * 100 > 100 ? "100%" : (textInt + increase*100).ToString() + "%";
+        RequieredPercentage.text = textInt + increase * 100 > 100 ? "100%" : textInt + increase * 100 < 1 ? "0%" : (textInt + increase*100).ToString() + "%";
     }
 
     private void ResolvePress()

@@ -29,7 +29,8 @@ public class EventBubble : MonoBehaviour
         GameHandler.EventPopup.SetActive(true);
 
         // Slider only goes from 0.1 to 0.9
-        GameHandler.EventPopup.GetComponent<EventHandler>().Activate((2f-Events.GetEvent(1).baseSuccess - ChanceLostToTime), Events.GetEvent(1));
+        Events.Event @event = Events.GetEvent(Random.Range(1,3));
+        GameHandler.EventPopup.GetComponent<EventHandler>().Activate((2f-@event.baseSuccess - ChanceLostToTime), @event);
         Destroy(gameObject);
     }
 
