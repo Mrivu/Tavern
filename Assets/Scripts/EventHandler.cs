@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +11,7 @@ public class EventHandler : MonoBehaviour
 {
     public TextMeshProUGUI EventText;
     public TextMeshProUGUI EventDescription;
+    public TextMeshProUGUI ChoiceDescription;
 
     public Slider SuccessFill;
     public Image GrayFill;
@@ -24,6 +27,7 @@ public class EventHandler : MonoBehaviour
     public Button C2;
     public Button C3;
     public Button C4;
+    private Button[] Choices;
 
     private float timer = 0.0f;
     private float timerStart = 2.0f;
@@ -41,11 +45,12 @@ public class EventHandler : MonoBehaviour
         EventText.text = returnEvent.eventText;
         EventDescription.text = returnEvent.eventDescription;
         currentEvent = returnEvent;
+        Choices = new Button[] { C1, C2, C3, C4 };
 
-        C1.GetComponentInChildren<TextMeshProUGUI>().text = returnEvent.choices[0];
-        C2.GetComponentInChildren<TextMeshProUGUI>().text = returnEvent.choices[1];
-        C3.GetComponentInChildren<TextMeshProUGUI>().text = returnEvent.choices[2];
-        C4.GetComponentInChildren<TextMeshProUGUI>().text = returnEvent.choices[3];
+        for (int i = 0; i < Choices.Count(); i++)
+        {
+            Choices[i].GetComponentInChildren<TextMeshProUGUI>().text = returnEvent.choices[i];
+        }
 
         CurrentPercentage.text = "0%";
         SuccessFill.value = 0f;
@@ -88,28 +93,20 @@ public class EventHandler : MonoBehaviour
 
     private void DisableChoices()
     {
-        C1.interactable = false;
-        C2.interactable = false;
-        C3.interactable = false;
-        C4.interactable = false;
-
-        C1.gameObject.GetComponent<Image>().color = Color.gray;
-        C2.gameObject.GetComponent<Image>().color = Color.gray;
-        C3.gameObject.GetComponent<Image>().color = Color.gray;
-        C4.gameObject.GetComponent<Image>().color = Color.gray;
+        for (int i = 0; i < Choices.Count(); i++)
+        {
+            Choices[i].interactable = false;
+            Choices[i].gameObject.GetComponent<Image>().color = Color.gray;
+        }
     }
 
     private void EnableChoices()
     {
-        C1.interactable = true;
-        C2.interactable = true;
-        C3.interactable = true;
-        C4.interactable = true;
-
-        C1.gameObject.GetComponent<Image>().color = Color.white;
-        C2.gameObject.GetComponent<Image>().color = Color.white;
-        C3.gameObject.GetComponent<Image>().color = Color.white;
-        C4.gameObject.GetComponent<Image>().color = Color.white;
+        for (int i = 0; i < Choices.Count(); i++)
+        {
+            Choices[i].interactable = true;
+            Choices[i].gameObject.GetComponent<Image>().color = Color.white;
+        }
     }
 
     void Update()
@@ -138,21 +135,42 @@ public class EventHandler : MonoBehaviour
             }
 
         }
+        if (RectTransformUtility.RectangleContainsScreenPoint(C1.gameObject.GetComponent<RectTransform>(), UnityEngine.Input.mousePosition, null))
+        {
+            ChoiceDescription.text = currentEvent.choiceResultText[0];
+        }
+        else if (RectTransformUtility.RectangleContainsScreenPoint(C2.gameObject.GetComponent<RectTransform>(), UnityEngine.Input.mousePosition, null))
+        {
+            ChoiceDescription.text = currentEvent.choiceResultText[1];
+        }
+        else if (RectTransformUtility.RectangleContainsScreenPoint(C3.gameObject.GetComponent<RectTransform>(), UnityEngine.Input.mousePosition, null))
+        {
+            ChoiceDescription.text = currentEvent.choiceResultText[2];
+        }
+        else if (RectTransformUtility.RectangleContainsScreenPoint(C4.gameObject.GetComponent<RectTransform>(), UnityEngine.Input.mousePosition, null))
+        {
+            ChoiceDescription.text = currentEvent.choiceResultText[3];
+        }
+        else
+        {
+            ChoiceDescription.text = "Hover above choices to see more";
+        }
     }
 
     private void AddSuccessRate(float increase)
     {
         GrayFill.fillAmount -= increase*0.8f;
         int textInt = int.Parse(RequieredPercentage.text.Replace("%", ""));
-        RequieredPercentage.text = (textInt + increase*100).ToString() + "%";
+        RequieredPercentage.text = textInt + increase * 100 > 100 ? "100%" : (textInt + increase*100).ToString() + "%";
     }
 
     private void ResolvePress()
     {
+        DisableChoices();
         ResolveButton.interactable = false;
         ResolveButton.gameObject.GetComponent<Image>().color = Color.gray;
         SuccessFill.value = 0.0f;
-        RandomPercentage = Mathf.Round(Random.Range(0.0f, 1f) * 100f) / 100f;
+        RandomPercentage = Mathf.Round(UnityEngine.Random.Range(0.0f, 1f) * 100f) / 100f;
         Debug.Log(RandomPercentage);
         timer = timerStart;
         startTime = true;
@@ -185,6 +203,6 @@ public class EventHandler : MonoBehaviour
     {
         // Slider only goes from 0.1 to 0.9
         GrayFill.fillAmount = Mathf.Round((0.1f + percentage*0.8f) * 100f) / 100f;
-        RequieredPercentage.text = (1f - percentage) < 0.01f ? "Failed" : Mathf.Round(100f - percentage*100f).ToString() + "%";
+        RequieredPercentage.text = (1f - percentage) < 0.01f ? "0%" : Mathf.Round(100f - percentage*100f).ToString() + "%";
     }
 }
