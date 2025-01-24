@@ -14,10 +14,11 @@ public class GameHandler : MonoBehaviour
 
 
     // Reputation values at start of game
-    public int AzureReputation = -20;
-    public int RefugeesReputation = -30;
-    public int TownsfolkReputation = 80;
-    public int RascalsReputation = -40;
+    private static int AzureReputation = -20;
+    private static int RefugeesReputation = -30;
+    private static int TownsfolkReputation = 80;
+    private static int RascalsReputation = -40;
+    // Reputation values (can be edited)
     public List<int> Reputations = new List<int>();
 
     // Get Gameobjects

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -75,26 +76,31 @@ public static class Events
             baseSuccess = 0.4f;
 
             choices = new List<string>() { "Catch", "Call patrons", "Call guards", "Let them escape" };
-            choiceResultText = new List<string>() { "Catch the thief yourself", "+25 success chance, Tavern patrons might get hurt", "Requires reputation above 0 with the Azure. +25 when reputation 0, +35 when reputation 30 and +45 when reputation 60.", "-100 success chance. The thief will escape" };
+            choiceResultText = new List<string>() { "Catch the thief yourself", "Requires reputation above 0 with the Townsfolk, +25 success chance, Tavern patrons might get hurt.", "Requires reputation above 0 with the Azure. +25 when reputation 0, +35 when reputation 30 and +45 when reputation 60.", "-100 success chance. The thief will escape" };
             // CHeck Azure reputation
             float azureHelp = 0.0f;
             choiceEnabled = new List<bool>() { true, true, true, true };
-            if (GameHandler.Instance.AzureReputation >= 60)
+            if (GameHandler.Instance.Reputations[0] >= 60)
             {
                 azureHelp = 0.45f;
             }
-            else if (GameHandler.Instance.AzureReputation >= 30)
+            else if (GameHandler.Instance.Reputations[0] >= 30)
             {
                 azureHelp = 0.35f;
             }
-            else if (GameHandler.Instance.AzureReputation >= 0)
+            else if (GameHandler.Instance.Reputations[0] > 0)
             {
                 azureHelp = 0.25f;
             }
             else
             {
                 azureHelp = 0.0f;
-                choiceEnabled = new List<bool>() { true, true, false, true };
+                Debug.Log("Azure reputation too low");
+                choiceEnabled[2] = false;
+            }
+            if (GameHandler.Instance.Reputations[2] < 1)
+            {
+                choiceEnabled[1] = false;
             }
             choiceChance = new List<float>() { 0.0f, 0.25f, azureHelp, -1.0f };
             choiceReputation = new List<Dictionary<int, int>>()
@@ -123,33 +129,20 @@ public static class Events
         }
     }
 
-    private static Dictionary<int, Event> eventDictionary;
+
+    private static Dictionary<int, Func<Event>> eventFactory = new Dictionary<int, Func<Event>>();
 
     static Events()
     {
-        eventDictionary = new Dictionary<int, Event>();
-        AddEvent(new Brawl());
-        AddEvent(new Thief());
-    }
-
-    public static void AddEvent(Event newEvent)
-    {
-        if (eventDictionary.ContainsKey(newEvent.eventID))
-        {
-            Debug.LogWarning("Event with ID " + newEvent.eventID + " already exists.");
-        }
-        else
-        {
-            eventDictionary[newEvent.eventID] = newEvent;
-        }
+        eventFactory.Add(1, () => new Brawl());
+        eventFactory.Add(2, () => new Thief());
     }
 
     public static Event GetEvent(int eventID)
     {
-        Event foundEvent;
-        if (eventDictionary.TryGetValue(eventID, out foundEvent))
+        if (eventFactory.ContainsKey(eventID))
         {
-            return foundEvent;
+            return eventFactory[eventID]();
         }
         else
         {

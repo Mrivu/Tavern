@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Windows;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class EventHandler : MonoBehaviour
 {
@@ -126,9 +127,8 @@ public class EventHandler : MonoBehaviour
             else if (GameHandler.Instance.Reputations[entry.Key] < -100)
             {
                 GameHandler.Instance.Reputations[entry.Key] = -100;
-            }   
+            }
         }
-
         SetReputationText();
     }
 
@@ -165,10 +165,8 @@ public class EventHandler : MonoBehaviour
         else if (startTime)
         {
             startTime = false;
-            Debug.Log(SuccessFill.value);
 
             // Timer end
-            Debug.Log("Resolve end");
             if ((Mathf.Round(SuccessFill.value * 100f) / 100f) > 1-GrayFill.fillAmount)
             {
                 HandleResult("Failed");

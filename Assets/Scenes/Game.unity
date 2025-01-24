@@ -2789,10 +2789,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EventBubble: {fileID: 746916588}
   EventPopup: {fileID: 615162157}
-  AzureReputation: -20
-  RefugeesReputation: -30
-  TownsfolkReputation: 80
-  RascalsReputation: -40
+  AzureReputation: 0
+  RefugeesReputation: 0
+  TownsfolkReputation: 0
+  RascalsReputation: 0
   Reputations: 
 --- !u!1 &1440085888
 GameObject:
