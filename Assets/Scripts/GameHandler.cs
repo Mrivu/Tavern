@@ -12,6 +12,12 @@ public class GameHandler : MonoBehaviour
     public GameObject EventBubble;
     public GameObject EventPopup;
 
+    // Patron Stats
+    private static int Population = 0;
+    private static int AvailableCustomers = 0;
+    private static int ActivePatrons = 0;
+    private static int Resting = 0;
+    private static int Sick = 0;
 
     // Reputation values at start of game
     private static int AzureReputation = -20;
