@@ -1878,6 +1878,7 @@ MonoBehaviour:
   MinZoom: 10
   MaximumOffset: 10
   CameraAnchor: {fileID: 255190775}
+  MainCamera: {fileID: 963194228}
 --- !u!1 &1016442114
 GameObject:
   m_ObjectHideFlags: 0

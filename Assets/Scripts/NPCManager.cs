@@ -27,7 +27,7 @@ public class NPCManager : MonoBehaviour
             BarMood = 2;
             DrunkMoodSwing = 0.67f;
             Satisfaction = 2f;
-            Position = new Vector3(20, 0, 0);
+            Position = new Vector3(5, 0, 0);
             NPCObject = null;
         }
     }
@@ -49,7 +49,7 @@ public class NPCManager : MonoBehaviour
             BarMood = 2;
             DrunkMoodSwing = 0.37f;
             Satisfaction = 2f;
-            Position = new Vector3(20, 0, 20);
+            Position = new Vector3(10, 0, 8);
             NPCObject = null;
         }
     }

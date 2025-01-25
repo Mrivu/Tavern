@@ -17,6 +17,7 @@ public class CameraControl : MonoBehaviour
     public float MaximumOffset;
 
     public Transform CameraAnchor;
+    public Transform MainCamera;
 
     // Update is called once per frame
     void Update()
@@ -29,6 +30,28 @@ public class CameraControl : MonoBehaviour
             CameraRotation(mouseX, mouseY);
             GetCameraZoom();
         }
+
+        Vector3 moveDirection = Vector3.zero;
+
+        if (Input.GetKey(KeyCode.W))
+        {
+            moveDirection += CameraAnchor.forward;
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            moveDirection -= CameraAnchor.forward; 
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            moveDirection -= CameraAnchor.right;
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            moveDirection += CameraAnchor.right;
+        }
+
+        moveDirection.y = 0;
+        CameraAnchor.position += moveDirection.normalized * (-MainCamera.localPosition.z * 0.45f) * Time.deltaTime;
     }
 
     private void CameraRotation(float MouseX, float MouseY)
