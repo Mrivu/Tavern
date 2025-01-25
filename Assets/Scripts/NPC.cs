@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class NPC : MonoBehaviour
 {
-    private GameHandler GameHandler;
-
     public float EventChance = 20.0f; // Chance of an event happening every second
     private float timer = 0.0f;
 
     // NPC Stats
     // Factions: Azure, Refugees, Townsfolk, Rascals
+    public int ID = 0;
+    public string Name = "None";
     public int Alliance = 0;
     public bool Rascal = false; // Rascals hide as townsfolk
     public bool Patron = false;
@@ -29,9 +29,49 @@ public class NPC : MonoBehaviour
     // Satisfaction (General satisfaction of Town's status) : 0 = Very Unhappy, 1 = Unhappy, 2 = Neutral, 3 = Happy, 4 = Very Happy
     public float Satisfaction = 2f;
 
+    public Vector3 Position = new Vector3(0, 0, 0);
+    public GameObject NPCObject;
+
+    public void Initialize(NPC npc)
+    {
+        ID = npc.ID;
+        Name = npc.Name;
+        Rascal = npc.Rascal;
+        Alliance = npc.Alliance;
+        Patron = npc.Patron;
+        Active = npc.Active;
+        SickTime = npc.SickTime;
+        Wealth = npc.Wealth;
+        Drunkness = npc.Drunkness;
+        Hunger = npc.Hunger;
+        BarMood = npc.BarMood;
+        DrunkMoodSwing = npc.DrunkMoodSwing;
+        Satisfaction = npc.Satisfaction;
+        Position = npc.Position;
+        NPCObject = npc.NPCObject;
+
+        switch (Alliance)
+        {
+            case 0:
+                NPCObject.GetComponent<Renderer>().material.color = Color.blue;
+                break;
+            case 1:
+                NPCObject.GetComponent<Renderer>().material.color = Color.green;
+                break;
+            case 2:
+                NPCObject.GetComponent<Renderer>().material.color = Color.yellow;
+                break;
+            case 3:
+                NPCObject.GetComponent<Renderer>().material.color = Color.red;
+                break;
+        }
+
+        NPCObject.name = "NPC" + ID.ToString();
+    }
+
     void Start()
     {
-        GameHandler = GameObject.Find("GameHandler").GetComponent<GameHandler>();
+
     }
 
     // Update is called once per frame
@@ -47,7 +87,7 @@ public class NPC : MonoBehaviour
             if (Random.Range(0.0f, 100.0f) < EventChance)
             {
                 //Debug.Log("Event happened!");
-                GameObject bubble = Instantiate(GameHandler.EventBubble, new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 3, gameObject.transform.position.z), Quaternion.identity);
+                GameObject bubble = Instantiate(GameHandler.Instance.EventBubble, new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 3, gameObject.transform.position.z), Quaternion.identity);
                 bubble.AddComponent<EventBubble>();
                 bubble.SetActive(true);
 
