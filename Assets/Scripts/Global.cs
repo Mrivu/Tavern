@@ -5,4 +5,5 @@ using UnityEngine;
 public class Global
 {
     public static bool CameraFreeze = false;
+
 }

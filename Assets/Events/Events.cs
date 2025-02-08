@@ -13,8 +13,10 @@ public static class Events
 
         public List<string> choices;
         public List<string> choiceResultText;
+        public string FailureText;
         public List<float> choiceChance;
         public List<Dictionary<int, int>> choiceReputation;
+        public List<int> choiceGold;
         public List<bool> choiceEnabled;
     }
 
@@ -31,7 +33,7 @@ public static class Events
             baseSuccess = 0.8f;
 
             choices = new List<string>() { "Bribe them to stop", "Side with guard", "Side with townsman", "Kick both from the tavern" };
-            choiceResultText = new List<string>() { "+10 success chance, costs gold. Both will be slightly unhappy", "+25 success chance, the townsman won't be happy", "+25 success chance, the guard won't be happy", "+45 success chance, potentially lose customers. Both will be slightly unhappy" };
+            choiceResultText = new List<string>() { "+10 success chance, costs gold. Both will be slightly unhappy", "+25 success chance, the townsman won't be happy", "+25 success chance, the guard won't be happy", "+45 success chance. Both will be slightly unhappy" };
             choiceChance = new List<float>() { 0.1f, 0.25f, 0.25f, 0.45f };
             choiceReputation = new List<Dictionary<int, int>>()
             {
@@ -62,6 +64,7 @@ public static class Events
                }
             };
 
+            choiceGold = new List<int>() { 0, 0, 0, 0, 0 }; // 5th is fail
             choiceEnabled = new List<bool>() { true, true, true, true };
         }
     }
@@ -72,7 +75,8 @@ public static class Events
         {
             eventID = 2;
             eventText = "You noticed a thief";
-            eventDescription = "A thief grabbed something from behind the counter";
+            int stealAmount = (int)UnityEngine.Random.Range(0.05f, 0.3f) * GameHandler.Instance.Gold;
+            eventDescription = "A thief grabbed " + stealAmount.ToString() + " Gold from behind the counter";
             baseSuccess = 0.4f;
 
             choices = new List<string>() { "Catch", "Call patrons", "Call guards", "Let them escape" };
@@ -126,6 +130,8 @@ public static class Events
                    { 3, -10 }
                }
             };
+
+            choiceGold = new List<int>() { 0, 0, 0, 0, -stealAmount }; // 5th is fail
         }
     }
 

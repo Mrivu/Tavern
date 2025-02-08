@@ -12,6 +12,9 @@ public class GameHandler : MonoBehaviour
     public GameObject EventBubble;
     public GameObject EventPopup;
 
+    [SerializeField] private GameObject GoldText;
+    public int Gold = 400;
+
     // Reputation values at start of game
     private static int AzureReputation = -20;
     private static int RefugeesReputation = -30;
@@ -45,5 +48,10 @@ public class GameHandler : MonoBehaviour
     {
         EventBubble.SetActive(false);
         EventPopup.SetActive(false);
+    }
+
+    public void ChangeGold(int change)
+    {
+        GoldText.GetComponent<TMPro.TextMeshProUGUI>().text = (Gold+change).ToString();
     }
 }
