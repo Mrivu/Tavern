@@ -29,7 +29,7 @@ public static class Events
         {
             eventID = 1;
             eventText = "Stop Brawl";
-            eventDescription = "A guard and a townsman started a brawl. \"Fuck you! I'll hang make sure you hang!\", cries the guard. \"You asked for this fucker!\", retorts the townsman.";
+            eventDescription = "A guard and a townsman started a brawl. \"Damn you! I'll hang make sure you hang!\", cries the guard. \"You asked for this you bastard!\", retorts the townsman.";
             baseSuccess = 0.8f;
 
             choices = new List<string>() { "Bribe them to stop", "Side with guard", "Side with townsman", "Kick both from the tavern" };
