@@ -13,7 +13,7 @@ public class GameHandler : MonoBehaviour
     public GameObject EventPopup;
 
     [SerializeField] private GameObject GoldText;
-    public int Gold = 400;
+    public int Gold;
 
     // Reputation values at start of game
     private static int AzureReputation = -20;
@@ -22,11 +22,15 @@ public class GameHandler : MonoBehaviour
     private static int RascalsReputation = -40;
     // Reputation values (can be edited)
     public List<int> Reputations = new List<int>();
+    public string[] Factions;
 
     // Get Gameobjects
     private void Awake()
     {
         Reputations = new List<int>() { AzureReputation, RefugeesReputation, TownsfolkReputation, RascalsReputation };
+        Factions = new string[] { "Azure", "Refugees", "Townsfolk", "Rascals" };
+
+        Gold = 400;
 
         // Ensure there's only one instance of GameHandler
         if (Instance == null)
@@ -52,6 +56,7 @@ public class GameHandler : MonoBehaviour
 
     public void ChangeGold(int change)
     {
-        GoldText.GetComponent<TMPro.TextMeshProUGUI>().text = (Gold+change).ToString();
+        Gold -= change;
+        GoldText.GetComponent<TMPro.TextMeshProUGUI>().text = "Gold: " + (Gold).ToString();
     }
 }

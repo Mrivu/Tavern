@@ -632,7 +632,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 925, y: 600}
+  m_AnchoredPosition: {x: 612, y: 443}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &343150224
@@ -1424,6 +1424,7 @@ MonoBehaviour:
   EventText: {fileID: 1972176013}
   EventDescription: {fileID: 1154506526}
   ChoiceDescription: {fileID: 1939708136}
+  FailureDescription: {fileID: 1552930125}
   SuccessFill: {fileID: 689527545}
   GrayFill: {fileID: 1440085890}
   RequieredPercentage: {fileID: 1636636685}
@@ -1844,7 +1845,7 @@ GameObject:
   - component: {fileID: 816104823}
   - component: {fileID: 816104822}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: GoldText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1866,7 +1867,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1100, y: 650}
+  m_AnchoredPosition: {x: -750, y: 500}
   m_SizeDelta: {x: 350, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &816104822
@@ -1889,7 +1890,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Coins: 400'
+  m_text: 'Gold: 400'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3127,9 +3128,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EventBubble: {fileID: 746916588}
   EventPopup: {fileID: 615162157}
-  GoldText: {fileID: 0}
+  GoldText: {fileID: 816104820}
   Gold: 400
   Reputations: 
+  Factions:
+  - Azure
+  - Refugees
+  - Townsfolk
+  - Rascals
 --- !u!114 &1431539099
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3976,7 +3982,7 @@ GameObject:
   - component: {fileID: 1552930126}
   - component: {fileID: 1552930125}
   m_Layer: 5
-  m_Name: ChoiceText (TMP)
+  m_Name: FailureDescription (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

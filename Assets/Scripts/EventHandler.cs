@@ -6,13 +6,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Windows;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class EventHandler : MonoBehaviour
 {
     public TextMeshProUGUI EventText;
     public TextMeshProUGUI EventDescription;
     public TextMeshProUGUI ChoiceDescription;
+    public TextMeshProUGUI FailureDescription;
 
     public Slider SuccessFill;
     public Image GrayFill;
@@ -35,7 +35,9 @@ public class EventHandler : MonoBehaviour
     public TextMeshProUGUI Refugees;
     public TextMeshProUGUI Townsfolk;
     public TextMeshProUGUI Rascals;
-    private TextMeshProUGUI[] Factions;
+    private TextMeshProUGUI[] Reputations;
+
+    private string[] Factions;
 
     private float timer = 0.0f;
     private float timerStart = 2.0f;
@@ -57,12 +59,16 @@ public class EventHandler : MonoBehaviour
         currentEvent = returnEvent;
         enabledChoices = returnEvent.choiceEnabled;
         Choices = new Button[] { C1, C2, C3, C4 };
-        Factions = new TextMeshProUGUI[] { Azure, Refugees, Townsfolk, Rascals };
+        Reputations = new TextMeshProUGUI[] { Azure, Refugees, Townsfolk, Rascals };
+        Factions = GameHandler.Instance.Factions;
+
+        Debug.Log(currentEvent.choiceGold);
+        FailureDescription.text = FailText(currentEvent.choiceReputation[4], currentEvent.choiceGold[4]);
         SetReputationText();
 
         for (int i = 0; i < Choices.Count(); i++)
         {
-            Choices[i].GetComponentInChildren<TextMeshProUGUI>().text = returnEvent.choices[i];
+            Choices[i].GetComponentInChildren<TextMeshProUGUI>().text = currentEvent.choices[i];
         }
 
         CurrentPercentage.text = "0%";
@@ -70,6 +76,7 @@ public class EventHandler : MonoBehaviour
         
         DisableChoices();
         EnableChoices();
+
     }
 
     private void Awake()
@@ -83,11 +90,29 @@ public class EventHandler : MonoBehaviour
         C4.onClick.AddListener(Input4);
     }
 
+    private string FailText(Dictionary<int, int> faildata, int goldloss)
+    {
+        string failText = "Failure: ";
+        foreach (KeyValuePair<int, int> entry in faildata)
+        {
+            if (entry.Value > 0)
+            {
+                failText += Factions[entry.Key] + " + " + entry.Value.ToString() + " ";
+            }
+            else if (entry.Value < 0)
+            {
+                failText += Factions[entry.Key] + " - " + Math.Abs(entry.Value).ToString() + " ";
+            }
+        }
+        failText += "\nGold loss: " + goldloss.ToString();
+        return failText;
+    }
+
     private void SetReputationText()
     {
-        for (int i = 0; i < Factions.Count(); i++)
+        for (int i = 0; i < Reputations.Count(); i++)
         {
-            Factions[i].text = GameHandler.Instance.Reputations[i].ToString();
+            Reputations[i].text = GameHandler.Instance.Reputations[i].ToString();
         }
     }
 
@@ -129,6 +154,8 @@ public class EventHandler : MonoBehaviour
                 GameHandler.Instance.Reputations[entry.Key] = -100;
             }
         }
+        // Handle gold
+        GameHandler.Instance.ChangeGold(currentEvent.choiceGold[choice]);
         SetReputationText();
     }
 
@@ -170,6 +197,7 @@ public class EventHandler : MonoBehaviour
             if ((Mathf.Round(SuccessFill.value * 100f) / 100f) > 1-GrayFill.fillAmount)
             {
                 HandleResult("Failed");
+                HandleFail();
             }
             else
             {
@@ -179,24 +207,42 @@ public class EventHandler : MonoBehaviour
         }
         if (RectTransformUtility.RectangleContainsScreenPoint(C1.gameObject.GetComponent<RectTransform>(), UnityEngine.Input.mousePosition, null))
         {
-            ChoiceDescription.text = currentEvent.choiceResultText[0];
+            ChoiceDescription.text = currentEvent.choiceResultText[0] + "\nCost: " + currentEvent.choiceGold[0].ToString();
         }
         else if (RectTransformUtility.RectangleContainsScreenPoint(C2.gameObject.GetComponent<RectTransform>(), UnityEngine.Input.mousePosition, null))
         {
-            ChoiceDescription.text = currentEvent.choiceResultText[1];
+            ChoiceDescription.text = currentEvent.choiceResultText[1] + "\nCost: " + currentEvent.choiceGold[1].ToString(); ;
         }
         else if (RectTransformUtility.RectangleContainsScreenPoint(C3.gameObject.GetComponent<RectTransform>(), UnityEngine.Input.mousePosition, null))
         {
-            ChoiceDescription.text = currentEvent.choiceResultText[2];
+            ChoiceDescription.text = currentEvent.choiceResultText[2] + "\nCost: " + currentEvent.choiceGold[2].ToString(); ;
         }
         else if (RectTransformUtility.RectangleContainsScreenPoint(C4.gameObject.GetComponent<RectTransform>(), UnityEngine.Input.mousePosition, null))
         {
-            ChoiceDescription.text = currentEvent.choiceResultText[3];
+            ChoiceDescription.text = currentEvent.choiceResultText[3] + "\nCost: " + currentEvent.choiceGold[3].ToString(); ;
         }
         else
         {
             ChoiceDescription.text = "Hover above choices to see more";
         }
+    }
+
+    private void HandleFail()
+    {
+        foreach (KeyValuePair<int, int> entry in currentEvent.choiceReputation[4])
+        {
+            GameHandler.Instance.Reputations[entry.Key] += entry.Value;
+            if (GameHandler.Instance.Reputations[entry.Key] > 100)
+            {
+                GameHandler.Instance.Reputations[entry.Key] = 100;
+            }
+            else if (GameHandler.Instance.Reputations[entry.Key] < -100)
+            {
+                GameHandler.Instance.Reputations[entry.Key] = -100;
+            }
+        }
+        GameHandler.Instance.ChangeGold(currentEvent.choiceGold[4]);
+        SetReputationText();
     }
 
     private void AddSuccessRate(float increase)
